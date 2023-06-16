@@ -10,11 +10,16 @@ import {
 
 import Landing from './components/Landing.jsx'
 import DashboardLayout from "./layouts/DashboardLayout.jsx";
+
+
 import Login from './components/Login/Login.jsx';
 import Signup from './components/Login/Signup.jsx'
+
+
 import Classes from './components/app/Classes.jsx';
 import Class from './components/app/Class.jsx';
 import Student from './components/app/Student.jsx';
+import ContactUs from "./components/app/ContactUs.jsx";
 
 
 
@@ -38,13 +43,15 @@ const router = createBrowserRouter(
             
             {/* private route goes around this */}
             <Route path='app' element={<DashboardLayout/>}>
-                {/*add index path here*/}
+                {/*add index path here (Dashboard maybe??) */}
                 <Route path="classes" element={<Classes/>}>
                   <Route path=":classId" element={<Class/>}>
                     <Route path=":studentId" element={<Student/>}/>
                   </Route>
                 </Route>
-            </Route> 
+
+                <Route path="contact-us" element={<ContactUs/>}/>
+            </Route>
         </Route>
     )
 )
