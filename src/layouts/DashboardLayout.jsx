@@ -1,7 +1,7 @@
 import { Fragment,useState } from 'react'
-import { Outlet,useNavigate } from "react-router-dom";
+import { Outlet,useNavigate,NavLink } from "react-router-dom";
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, CogIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const user = {
   name: 'Tom Cook',
@@ -10,14 +10,11 @@ const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Dashboard', href: '../app', current: false },
-  { name: 'Classes', href: '../app/classes', current: false },
-  {name: 'Contact Us', href: '../app/contact-us', current: false },
+  { name: 'Classes', href: '../app/classes', current: window.location.pathname === '/app/classes',to: "classes" },
+  {name: 'Grade', href: '../app/grade' , current: window.location.pathname === '/app/grade',to: "grade"},
+  {name: 'Contact Us', href: '../app/contact-us', current: window.location.pathname === '/app/contact-us', to: "contact-us" },
 ]
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  {name: 'Billing', href: '#'},
   { name: 'Sign out', href: '#' },
 ]
 
@@ -25,37 +22,11 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-const getIdx = () => {
-  if (window.location.pathname === '/app/classes') {
-    navigation[1].current = true;
-    return 1
-  }
-  if (window.location.pathname === '/app') {
-    navigation[0].current = true;
-    return 0
-  }
-  if (window.location.pathname === '/app/contact-us') {
-    navigation[2].current = true;
-    return 2
-  }
-}
-
-
 
 function DashboardLayout() {
   const navigate = useNavigate();
-  const currTab = getIdx()
-  const [activeTab,setActiveTab] = useState(currTab);
   const [classes,setClasses] = useState([])
 
-  const handleNavigation = (e) => {
-    e.preventDefault();
-    const idx = e.target.value;
-    navigation[activeTab].current = false;
-    setActiveTab(idx);
-    navigation[idx].current = true;
-    navigate(navigation[idx].href);
-  }
 
 
   return (
@@ -81,20 +52,18 @@ function DashboardLayout() {
                     </div>
                     <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                       {navigation.map((item,i) => (
-                        <button
+                        <NavLink
+                          to={item.to}
                           key={item.name}
                           className={classNames(
-                            item.current
-                              ? 'border-indigo-500 text-gray-900'
-                              : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                            'border-transparent text-gray-500 hover:border-indigo-500 hover:text-indigo-500',
                             'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium'
                           )}
                           aria-current={item.current ? 'page' : undefined}
-                          onClick={(e) => handleNavigation(e)}
                           value={i}
                         >
                           {item.name}
-                        </button>
+                        </NavLink>
                       ))}
                     </div>
                   </div>
@@ -104,7 +73,7 @@ function DashboardLayout() {
                       className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
+                      <CogIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
 
                     {/* Profile dropdown */}
@@ -191,7 +160,7 @@ function DashboardLayout() {
                       className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
+                      <CogIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
                   </div>
                   <div className="mt-3 space-y-1">

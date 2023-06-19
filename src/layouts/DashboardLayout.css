@@ -1,0 +1,7 @@
+navlinkstyle.active{
+    --tw-text-opacity: 1 !important;
+    color: rgb(17 24 39 / var(--tw-text-opacity)) !important;
+    --tw-border-opacity: 1 !important;
+    border-color: rgb(99 102 241 / var(--tw-border-opacity)) !important;
+}
+

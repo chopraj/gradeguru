@@ -1,7 +1,16 @@
 import React,{useState} from 'react'
+import { useNavigate } from "react-router-dom";
 import { PlusIcon } from '@heroicons/react/20/solid'
 import Divider from '../utils/Divider'
 import AddClass from './AddClass'
+
+const CLASSLIST = [
+  {name: "1st Period", subject: "Science", "year": '2022'},
+  {name: "2st Period", subject: "Honors English", "year": '2022'},
+  {name: "3st Period", subject: "APUSH", "year": '2022'},
+  {name: "4st Period", subject: "Math", "year": '2022'},
+  
+]
 
 const NoClassesSection = ({open,setOpen}) => {
 
@@ -42,9 +51,34 @@ const NoClassesSection = ({open,setOpen}) => {
   )
 }
 
+const SingleClass = ({name,subject,year,id}) => {
+
+  const navigate = useNavigate();
+
+  const handleNavigateToSingleClass = () => {
+    navigate(`./${id}`);
+  }
+
+  return (
+    <li onClick={handleNavigateToSingleClass} className="cursor-pointer col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
+          <div className="flex w-full items-center justify-between space-x-6 p-6">
+            <div className="flex-1 truncate">
+              <div className="flex items-center space-x-3">
+                <h3 className="truncate text-sm font-medium text-gray-900">{name}</h3>
+                <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                  {subject}
+                </span>
+              </div>
+              <p className="mt-1 truncate text-sm text-gray-500">{year}</p>
+            </div>
+          </div>
+    </li>
+  )
+}
+
 const Classes = () => {
 
-  const [slideoverOpen,setSlideoverOpen] = useState(true);
+  const [slideoverOpen,setSlideoverOpen] = useState(false);
 
   const handleAddClassBtn = () => {
     setSlideoverOpen(true);
@@ -54,7 +88,7 @@ const Classes = () => {
     <div className="md:flex md:items-center md:justify-between">
       <div className="min-w-0 flex-1">
         <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-          Classes
+          Your Classes
         </h2>
       </div>
       <div className="mt-4 flex md:ml-4 md:mt-0">
@@ -69,7 +103,12 @@ const Classes = () => {
       </div>
     </div>
     <Divider/>
-    <NoClassesSection open={slideoverOpen} setOpen={setSlideoverOpen}/>
+    {CLASSLIST ? (
+      <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+        {CLASSLIST.map((c) => <SingleClass name={c.name} subject={c.subject} year={c.year} />)}
+      </ul>
+    ) : <NoClassesSection open={slideoverOpen} setOpen={setSlideoverOpen}/>}
+    
     <AddClass open={slideoverOpen} setOpen={setSlideoverOpen}/>
     </>
   )
@@ -77,24 +116,4 @@ const Classes = () => {
 
 export default Classes
 
-{/* <div className="md:flex md:items-center md:justify-between">
-      <div className="min-w-0 flex-1">
-        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-          Back End Developer
-        </h2>
-      </div>
-      <div className="mt-4 flex md:ml-4 md:mt-0">
-        <button
-          type="button"
-          className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-        >
-          Edit
-        </button>
-        <button
-          type="button"
-          className="ml-3 inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Publish
-        </button>
-      </div>
-    </div> */}
+
