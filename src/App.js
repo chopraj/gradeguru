@@ -8,6 +8,9 @@ import {
     RouterProvider,
 } from "react-router-dom";
 
+import {AuthProvider} from './contexts/AuthContext';
+import PrivateRoute from "./components/utils/PrivateRoute";
+
 import Landing from './components/Landing.jsx'
 import DashboardLayout from "./layouts/DashboardLayout.jsx";
 
@@ -42,19 +45,20 @@ const router = createBrowserRouter(
             <Route path="login" element={<Login/>}/>
             <Route path="signup" element={<Signup/>}/>
             
-            {/* private route goes around this */}
-            <Route path='app' element={<DashboardLayout/>}>
-                {/*add index path here (Dashboard maybe??) */}
-                <Route path="classes">
-                  <Route index element={<Classes/>}/> 
-                  <Route path=":classId" element={<Class/>}>
-                    <Route path=":studentId" element={<Student/>}/>
-                  </Route>
+            <Route element={<PrivateRoute/>}>
+                <Route path='app' element={<DashboardLayout/>}>
+                    {/*add index path here (Dashboard maybe??) */}
+                    <Route path="classes">
+                    <Route index element={<Classes/>}/> 
+                    <Route path=":classId" element={<Class/>}>
+                        <Route path=":studentId" element={<Student/>}/>
+                    </Route>
+                    </Route>
+
+                    <Route path="grade" element={<Grade/>}/>
+
+                    <Route path="contact-us" element={<ContactUs/>}/>
                 </Route>
-
-                <Route path="grade" element={<Grade/>}/>
-
-                <Route path="contact-us" element={<ContactUs/>}/>
             </Route>
         </Route>
     )
@@ -63,7 +67,11 @@ const router = createBrowserRouter(
 
 // The main React App component
 const App = () => {
-    return <RouterProvider router={router}/>
+    return (
+        <AuthProvider>
+            <RouterProvider router={router}/>
+        </AuthProvider>
+    )
 };
 
 

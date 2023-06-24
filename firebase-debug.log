@@ -1,0 +1,39 @@
+[debug] [2023-06-23T20:11:22.781Z] ----------------------------------------------------------------------
+[debug] [2023-06-23T20:11:22.782Z] Command:       /Users/rajc/.nvm/versions/node/v19.4.0/bin/node /Users/rajc/.nvm/versions/node/v19.4.0/bin/firebase init
+[debug] [2023-06-23T20:11:22.782Z] CLI Version:   11.22.0
+[debug] [2023-06-23T20:11:22.783Z] Platform:      darwin
+[debug] [2023-06-23T20:11:22.783Z] Node Version:  v19.4.0
+[debug] [2023-06-23T20:11:22.783Z] Time:          Fri Jun 23 2023 13:11:22 GMT-0700 (Mountain Standard Time)
+[debug] [2023-06-23T20:11:22.783Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-06-23T20:11:22.786Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-06-23T20:11:22.786Z] > authorizing via signed-in user (rajchopra@wannajob.io)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/rajc/Developer/Business/gradeguru/client
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 
+[debug] [2023-06-23T20:11:55.098Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2023-06-23T20:11:55.098Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"gradeguru","name":"gradeguru"}
+[debug] [2023-06-23T20:11:55.510Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 409
+[debug] [2023-06-23T20:11:55.510Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"error":{"code":409,"message":"Requested entity already exists","status":"ALREADY_EXISTS"}}
+[debug] [2023-06-23T20:11:55.618Z] FirebaseError: HTTP Error: 409, Requested entity already exists
+    at responseToError (/Users/rajc/.nvm/versions/node/v19.4.0/lib/node_modules/firebase-tools/lib/responseToError.js:49:12)
+    at RetryOperation._fn (/Users/rajc/.nvm/versions/node/v19.4.0/lib/node_modules/firebase-tools/lib/apiv2.js:288:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[error] 
+[error] Error: Failed to create project because there is already a project with ID gradeguru. Please try again with a unique project ID.

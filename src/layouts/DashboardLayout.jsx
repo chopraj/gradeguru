@@ -2,6 +2,8 @@ import { Fragment,useState } from 'react'
 import { Outlet,useNavigate,NavLink } from "react-router-dom";
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, CogIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { signOut } from "firebase/auth";
+import { auth } from "../components/firebase/config";
 
 const user = {
   name: 'Tom Cook',
@@ -26,6 +28,18 @@ function classNames(...classes) {
 function DashboardLayout() {
   const navigate = useNavigate();
   const [classes,setClasses] = useState([])
+
+  const handleLogout = () => {
+    signOut(auth)
+        .then(() => {
+            console.log("Signout successful!");
+            navigate("/");
+        })
+        .catch((err) => {
+            console.log("Error signing out");
+            console.log(err);
+        });
+};
 
 
 
@@ -99,6 +113,7 @@ function DashboardLayout() {
                               {({ active }) => (
                                 <a
                                   href={item.href}
+                                  onClick={handleLogout}
                                   className={classNames(
                                     active ? 'bg-gray-100' : '',
                                     'block px-4 py-2 text-sm text-gray-700'
@@ -168,6 +183,7 @@ function DashboardLayout() {
                       <Disclosure.Button
                         key={item.name}
                         as="a"
+                        onClick={handleLogout}
                         href={item.href}
                         className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
                       >

@@ -1,24 +1,60 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { Fragment, useState } from 'react'
 import { LinkIcon, PlusIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid'
+import {addDoc, arrayUnion, collection, doc, setDoc, updateDoc} from 'firebase/firestore'
 
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import {db} from '../firebase/config'
+import { useParams } from 'react-router-dom'
 
-export default function AddAssignment({open,setOpen,name,points,assignmentDetail,rubricDescription}) {
+export default function AddAssignment({open,setOpen,firebaseDocId,setFirebaseDocId,name,setName,points,setPoints,assignmentDetail,setAssignmentDetail,rubricDescription,setRubricDescription,notifyAssignmentsChange,notification}) {
+  
+  const {classId} = useParams();
+  
+  const handleAddAssignment = async () => {
+    console.log("Starting to add assignment...")
+    try {
+      const assignmentRef = await addDoc(collection(db, "assignments"),{
+        name: name,
+        points: points,
+        assignmentDetail: assignmentDetail,
+        rubricDescription: rubricDescription,
+      });
+      const classRef = await updateDoc(doc(db,"classes",classId),{
+        assignments: arrayUnion(assignmentRef)
+      });
+      console.log("Added assignment successfully!");
+      notifyAssignmentsChange(!notification);
+      setOpen(false);
+    } catch (err) {
+      console.log(err,err.message);
+    }
+  }
+
+  const handleUpdateAssignment = async () => {
+    console.log("Starting to update assignment...")
+    try {
+      const assignmentRef = await updateDoc(doc(db,"assignments",firebaseDocId),{
+        name: name,
+        points: points,
+        assignmentDetail: assignmentDetail,
+        rubricDescription: rubricDescription,
+      });
+      console.log("Updated assignment successfully!");
+      notifyAssignmentsChange(!notification);
+      setOpen(false);
+    } catch (err) {
+      console.log(err,err.message);
+    }
+  }
+
+  const handleSave = async () => {
+    if (firebaseDocId === "") {
+      handleAddAssignment();
+    } else {
+      handleUpdateAssignment();
+    }
+  }
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -38,7 +74,7 @@ export default function AddAssignment({open,setOpen,name,points,assignmentDetail
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl">
-                  <form className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                  <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                     <div className="flex-1">
                       {/* Header */}
                       <div className="bg-gray-50 px-4 py-6 sm:px-6">
@@ -80,6 +116,7 @@ export default function AddAssignment({open,setOpen,name,points,assignmentDetail
                             <input
                               type="text"
                               value={name}
+                              onChange={(e) => setName(e.target.value)}
                               name="project-name"
                               id="project-name"
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -96,9 +133,10 @@ export default function AddAssignment({open,setOpen,name,points,assignmentDetail
                           <div className="sm:col-span-2">
                             <input
                               type="number"
-                              value={parseInt(points)}
-                              name="project-name"
-                              id="project-name"
+                              value={points}
+                              onChange={(e) => setPoints(e.target.value)}
+                              name="project-points"
+                              id="project-points"
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                           </div>
@@ -116,9 +154,10 @@ export default function AddAssignment({open,setOpen,name,points,assignmentDetail
                           </div>
                           <div className="sm:col-span-2">
                             <textarea
-                              id="project-description"
+                              id="project-detail"
                               value={assignmentDetail}
-                              name="project-description"
+                              onChange={(e) => setAssignmentDetail(e.target.value)}
+                              name="project-detail"
                               rows={3}
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               placeholder={'This is the assignment description that our AI will evaluate your students against. Be as detailed as possible for best results.'}
@@ -136,6 +175,7 @@ export default function AddAssignment({open,setOpen,name,points,assignmentDetail
                             <textarea
                               id="project-description"
                               value={rubricDescription}
+                              onChange={(e) => setRubricDescription(e.target.value)}
                               name="project-description"
                               rows={3}
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -158,6 +198,7 @@ export default function AddAssignment({open,setOpen,name,points,assignmentDetail
                           Cancel
                         </button>
                         <button
+                          onClick={handleSave}
                           type="submit"
                           className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
@@ -165,7 +206,7 @@ export default function AddAssignment({open,setOpen,name,points,assignmentDetail
                         </button>
                       </div>
                     </div>
-                  </form>
+                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

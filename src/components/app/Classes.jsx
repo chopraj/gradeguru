@@ -1,22 +1,21 @@
-import React,{useState} from 'react'
-import { useNavigate } from "react-router-dom";
-import { PlusIcon } from '@heroicons/react/20/solid'
-import Divider from '../utils/Divider'
-import AddClass from './AddClass'
+import React,{useEffect, useState} from 'react'
+import { doc, getDoc } from "firebase/firestore";
 
-const CLASSLIST = [
-  {name: "1st Period", subject: "Science", "year": '2022'},
-  {name: "2st Period", subject: "Honors English", "year": '2022'},
-  {name: "3st Period", subject: "APUSH", "year": '2022'},
-  {name: "4st Period", subject: "Math", "year": '2022'},
-  
-]
+import AddClass from './AddClass'
+import Divider from '../utils/Divider'
+import { PlusIcon } from '@heroicons/react/20/solid'
+import {db} from '../firebase/config'
+import {useAuth} from '../../contexts/AuthContext'
+import { useNavigate } from "react-router-dom";
 
 const NoClassesSection = ({open,setOpen}) => {
 
+  
   const handleAddClassBtn = () => {
     setOpen(true);
   }
+
+
 
   return (
   <div className="text-center">
@@ -54,7 +53,7 @@ const NoClassesSection = ({open,setOpen}) => {
 const SingleClass = ({name,subject,year,id}) => {
 
   const navigate = useNavigate();
-
+  
   const handleNavigateToSingleClass = () => {
     navigate(`./${id}`);
   }
@@ -65,7 +64,7 @@ const SingleClass = ({name,subject,year,id}) => {
             <div className="flex-1 truncate">
               <div className="flex items-center space-x-3">
                 <h3 className="truncate text-sm font-medium text-gray-900">{name}</h3>
-                <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                <span className="inline-flex flex-shrink-0 it9ems-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
                   {subject}
                 </span>
               </div>
@@ -78,8 +77,35 @@ const SingleClass = ({name,subject,year,id}) => {
 
 const Classes = () => {
 
-  const [slideoverOpen,setSlideoverOpen] = useState(false);
+  const {firebaseUser} = useAuth();
+  const [classes,setClasses] = useState([]);
+  const [classesChanged,setClassesChanged] = useState(false);
 
+  const getClasses = async () => {
+    const docRef = doc(db,"users",firebaseUser.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const fetchedClasses = [];
+      for (const c of docSnap.data().classes) {
+        const classSnap = await getDoc(c);
+        if (classSnap.exists()) {
+          fetchedClasses.push({id: classSnap.id, ...classSnap.data()})
+        }
+      }
+      setClasses(fetchedClasses)
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
+
+
+  useEffect(() => {
+    getClasses();
+  },[classesChanged])
+
+
+  const [slideoverOpen,setSlideoverOpen] = useState(false);
   const handleAddClassBtn = () => {
     setSlideoverOpen(true);
   }
@@ -103,17 +129,17 @@ const Classes = () => {
       </div>
     </div>
     <Divider/>
-    {CLASSLIST ? (
-      <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
-        {CLASSLIST.map((c) => <SingleClass name={c.name} subject={c.subject} year={c.year} />)}
+    {classes && classes.length ? (
+      <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+        {classes.map((c,i) => <SingleClass key={i} id={c.id} name={c.name} subject={c.subject} year={c.year} />)}
       </ul>
     ) : <NoClassesSection open={slideoverOpen} setOpen={setSlideoverOpen}/>}
     
-    <AddClass open={slideoverOpen} setOpen={setSlideoverOpen}/>
+    <AddClass open={slideoverOpen} setOpen={setSlideoverOpen} notification={classesChanged} notifyChange={setClassesChanged} />
     </>
   )
 }
-
+// TODO: set loading state above^^
 export default Classes
 
 

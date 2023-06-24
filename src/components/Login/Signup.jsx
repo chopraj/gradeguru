@@ -1,4 +1,97 @@
-function Login() {
+import React, {useState} from 'react'
+import {auth,db} from '../firebase/config'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import {doc,setDoc,addDoc,updateDoc,arrayUnion,collection} from 'firebase/firestore'
+import { useNavigate } from "react-router-dom";
+import { XCircleIcon } from '@heroicons/react/20/solid'
+
+
+const ERRORS = {
+  "Firebase: Error (auth/email-already-in-use).":
+      "This email is already in use",
+  "Firebase: Error (auth/internal-error).":
+      "Server error, please try again",
+};
+
+
+const Login = () => {
+
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword,setConfirmPassword] = useState("");
+  const [error,setError] = useState(null);
+
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    if (!checkInputs()) {
+      return;
+    }
+    console.log('Signing Up...')
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth,email,password);
+      const userRef = await setDoc(doc(db, "users",userCredential.user.uid),{
+        premiumUser: false,
+        classes: []
+      });
+      navigate("/app");
+    } catch (err) {
+      console.log(err);
+      console.log(err.message);
+      if (err.message in ERRORS) {
+        setError(ERRORS[err.message]);
+      }
+    }
+  };
+
+
+  const checkInputs = () => {
+    if (!isEmail(email)) {
+        setError("Please enter a valid email");
+        return false;
+    }
+    if (password !== confirmPassword) {
+        setError("Passwords do not match.");
+        return false;
+    }
+    if (!isStrongPassword(password)) {
+        setError("Password must be at least 6 characters.");
+        return false;
+    }
+    return true;
+    };
+
+  function isStrongPassword(password) {
+    return password.length >= 6;
+  }
+
+  function isEmail(email) {
+    const re =
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setError("");
+  };
+
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    setError("");
+  };
+
+  const handlePasswordConfirmChange = (e) => {
+    setConfirmPassword(e.target.value);
+    setError("");
+  };
+
+  const navigateToLogin = () => {
+    navigate("/login");
+  }
+
     return (
       <>
         <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -15,7 +108,19 @@ function Login() {
   
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
             <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-              <form className="space-y-6" action="#" method="POST">
+            {error && (
+              <div className="rounded-md bg-red-50 p-4 mb-6">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">{error}</h3>
+                  </div>
+                </div>
+              </div>
+          )}
+              <div className="space-y-6">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                     Email address
@@ -23,6 +128,8 @@ function Login() {
                   <div className="mt-2">
                     <input
                       id="email"
+                      value={email}
+                      onChange={handleEmailChange}
                       name="email"
                       type="email"
                       autoComplete="email"
@@ -39,6 +146,8 @@ function Login() {
                   <div className="mt-2">
                     <input
                       id="password"
+                      value={password}
+                      onChange={handlePasswordChange}
                       name="password"
                       type="password"
                       autoComplete="current-password"
@@ -55,6 +164,8 @@ function Login() {
                   <div className="mt-2">
                     <input
                       id="password"
+                      value={confirmPassword}
+                      onChange={handlePasswordConfirmChange}
                       name="password"
                       type="password"
                       autoComplete="current-password"
@@ -67,18 +178,19 @@ function Login() {
   
                 <div>
                   <button
+                    onClick={handleSignUp}
                     type="submit"
                     className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     Create Account
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
   
             <p className="mt-10 text-center text-sm text-gray-500">
               Already a member?{' '}
-              <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              <a onClick={navigateToLogin} href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                 Log in!
               </a>
             </p>
