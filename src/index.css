@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -14,4 +14,35 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+} */
+
+html {
+  scroll-behavior: smooth;
+ }
+
+#gradient-canvas {
+  --gradient-color-1: #6ec3f4;
+  --gradient-color-2: #ffdb3a;
+  --gradient-color-3: #ff61ab;
+  --gradient-color-4: #ffab3d;
+}
+
+.trapezoid-clip-y {
+  clip-path: polygon(0 3vw, 100% 0, 100% calc(100% - 3vw), 0 100%);
+}
+
+.trapezoid-clip-b {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 3vw), 0 100%);
+}
+
+.trapezoid-clip-t {
+  clip-path: polygon(0 3vw, 100% 0, 100% 100%, 0 100%);
+}
+
+/* 
+  Handle mix-blend-mode difference issue in Safari, see:
+  https://stackoverflow.com/questions/70891365/css-mix-blend-mode-difference-issue-in-safari
+*/
+.translate-3d-0 {
+  transform: translate3d(0, 0, 0)
 }

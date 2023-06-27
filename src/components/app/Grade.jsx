@@ -1,25 +1,31 @@
 import React,{useEffect, useState} from 'react'
-import { doc, getDoc } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
 import Checklist from '../utils/Checklist'
 import Divider from '../utils/Divider'
+import GradeModal from './GradeModal'
 import {db} from '../firebase/config'
 import {useAuth} from '../../contexts/AuthContext'
 
 const Grade = () => {
-  
-  //TODO: add states here for checklist values
   const isPremiumUser = false;
   const fetchClasses = true;
   const [assignmentDetail,setAssignmentDetail] = useState("")
   const [rubricDescription,setRubricDescription] = useState("")
   const [studentResponse, setStudentResponse] = useState("")
+  const [loading, setLoading] = useState(false);
 
   // Checklists
   const [classSelected, setClassSelected] = useState(null);
   const [studentSelected, setStudentSelected] = useState(null);
   const [assignmentSelected, setAssignmentSelected] = useState(null);
+
+  // Grade Modal
+  const [open, setOpen] = useState(false);
+  const [grade, setGrade] = useState("");
+  const [explanation, setExplanation] = useState("");
+  const [tips, setTips] = useState("");
 
   const {firebaseUser} = useAuth();
   const [classes,setClasses] = useState([{name: " ", id: 1}]);
@@ -28,7 +34,9 @@ const Grade = () => {
 
 
   const handleGrade = async () => {
-    const result = await fetch("http://localhost:3001/grade", {
+    try {
+      setLoading(true);
+      const result = await fetch("http://localhost:3001/grade", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,9 +46,33 @@ const Grade = () => {
         assignmentDetail: assignmentDetail,
         rubricDescription: rubricDescription,
         studentResponse: studentResponse
+      })}).then(res => res.json()).then(res => JSON.parse(res.content))
+      setGrade(result.grade);
+      setExplanation(result.explanation);
+      setTips(result.tips);
+      setOpen(true);
+    if (studentSelected) {
+      const assignmentRef = doc(db, "assignments", assignmentSelected.uid);
+      const submissionRef = await addDoc(collection(db, "submissions"), {
+        assignmentId: assignmentRef,
+        feedback: {
+          grade: result.grade,
+          explanation: result.explanation,
+          tips: result.tips
+        },
+        timestamp: serverTimestamp(),
+      });
+      const studentRef = await updateDoc(doc(db, "students", studentSelected.uid), {
+        submissions: arrayUnion(submissionRef),
       })
-    }).then(res => res.json());
-    console.log(JSON.parse(result.content));
+    }
+   
+    setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+    
   }
 
   const getClasses = async () => {
@@ -48,10 +80,12 @@ const Grade = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const fetchedClasses = [];
+      console.log('docSnap',docSnap.data())
       for (const c of docSnap.data().classes) {
         const classSnap = await getDoc(c);
         if (classSnap.exists()) {
           fetchedClasses.push({id: classSnap.id, ...classSnap.data()})
+          console.log(classSnap.data())
         }
       }
       setClasses(fetchedClasses)
@@ -62,8 +96,6 @@ const Grade = () => {
   }
 
   const getStudentsAndAssignments = async () => {
-    console.log('Got here')
-    console.log(classSelected)
     const classRef = doc(db, "classes", classSelected.id);
     const classSnap = await getDoc(classRef);
     if (classSnap.exists()) {
@@ -99,6 +131,16 @@ const Grade = () => {
     }
     getStudentsAndAssignments();
   },[classSelected])
+
+  useEffect(() => {
+    if (!assignmentSelected) {
+      setAssignmentDetail("");
+      setRubricDescription("");
+      return;
+    }
+    setAssignmentDetail(assignmentSelected.assignmentDetail);
+    setRubricDescription(assignmentSelected.rubricDescription);
+  },[assignmentSelected])
 
 
   return (
@@ -164,7 +206,8 @@ const Grade = () => {
                 value={studentResponse}
                 onChange={(e) => setStudentResponse(e.target.value)}
                 className="mt-3 block w-full rounded-md border-0  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder={"This is the rubric our Ai will use to grade your students' submissions. Be as detailed as possible for best results."}
+                placeholder={"This is the student's response to the assignment. You can copy and paste it here."}
+
             />
             </div>
         </div>
@@ -172,11 +215,14 @@ const Grade = () => {
     <button
         onClick={handleGrade}
         type="button"
+        disabled={loading}
         className="mt-10 inline-flex items-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
       >
-        Grade
-        <CheckCircleIcon className="-mr-0.5 h-5 w-5" aria-hidden="true" />
-      </button>
+      {loading ? (<span className="mx-5 loading loading-md loading-dots text-success "></span>) : ("Grade")}
+        {!loading ? <CheckCircleIcon className="-mr-0.5 h-5 w-5" aria-hidden="true" /> : ""}
+    </button>
+    <GradeModal open={open} setOpen={setOpen} grade={grade} explanation={explanation} tips={tips}/>
+    
     </>
   )
 }

@@ -24,6 +24,7 @@ const Class = () => {
   const [studentId,setStudentId] = useState('');
   const [studentYear,setStudentYear] = useState('');
   const [studentsChanged,setStudentsChanged] = useState(false);
+  const [studentsLoading, setStudentsLoading] = useState(false);
 
   const [assignments,setAssignments] = useState([]);
   const [assignmentFBID,setAssignmentFBID] = useState('');
@@ -33,6 +34,7 @@ const Class = () => {
   const [assignmentDetail,setAssignmentDetail] = useState('');
   const [assignmentRubric,setAssignmentRubric] = useState('');
   const [assignmentsChanged,setAssignmentsChanged] = useState(false);
+  const [assignmentsLoading, setAssignmentsLoading] = useState(false);
 
   const handleAddAssignment = () => {
     setAssignmentFBID("");
@@ -56,6 +58,7 @@ const Class = () => {
   }
 
   const getStudentsFromClass = async () => {
+    setStudentsLoading(true);
     const classRef = doc(db, "classes", classId);
     const classSnap = await getDoc(classRef);
     if (classSnap.exists()) {
@@ -68,9 +71,11 @@ const Class = () => {
       }
       setStudents(fetchedStates);
     }
+    setStudentsLoading(false);
   }
 
   const getAssignmentsFromClass = async () => {
+    setAssignmentsLoading(true);
     const classRef = doc(db, "classes", classId);
     const classSnap = await getDoc(classRef);
     if (classSnap.exists()) {
@@ -83,9 +88,12 @@ const Class = () => {
       }
       setAssignments(fetchedStates);
     }
+    setAssignmentsLoading(false);
   }
 
   const getClassInfo = async () => {
+    setStudentsLoading(true);
+    setAssignmentsLoading(true);
     const classRef = doc(db, "classes", classId);
     const classSnap = await getDoc(classRef);
     if (classSnap.exists()) {
@@ -108,6 +116,8 @@ const Class = () => {
       }
       setStudents(fetchedStudents);
       setAssignments(fetchedAssignments);
+      setStudentsLoading(false);
+      setAssignmentsLoading(false);
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
@@ -160,56 +170,73 @@ const Class = () => {
     <div className="flex flex-row flex-wrap">
       <div className="w-1/2">
         <div className='text-xl font-bold'>Students</div>
-        <ul className="pr-10 py-5 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
-          {students.map((s,i) => {
-            return (
-              <li onClick={() => {
-                setStudentFBID(s.uid);
-                setStudentName(s.name);
-                setStudentId(s.id);
-                setStudentYear(s.year);
-                setOpenAddStudent(true); 
-              }} key={i} className="cursor-pointer col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
-                <div className="flex w-full items-center justify-between space-x-6 p-6">
-                  <div className="flex-1 truncate">
-                    <div className="flex items-center space-x-3">
-                      <h3 className="truncate text-sm font-medium text-gray-900">{s.name}</h3>
-                  {s.id && <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                    #{s.id}
-                  </span>}
+        {studentsLoading ? (<span className="my-10 loading loading-dots loading-lg"></span>)
+         : (
+          students && students.length ? (
+            <ul className="pr-10 py-5 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+            {students.map((s,i) => {
+              return (
+                <li onClick={() => {
+                  setStudentFBID(s.uid);
+                  setStudentName(s.name);
+                  setStudentId(s.id);
+                  setStudentYear(s.year);
+                  setOpenAddStudent(true); 
+                }} key={i} className="cursor-pointer col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
+                  <div className="flex w-full items-center justify-between space-x-6 p-6">
+                    <div className="flex-1 truncate">
+                      <div className="flex items-center space-x-3">
+                        <h3 className="truncate text-sm font-medium text-gray-900">{s.name}</h3>
+                    {s.id && <span className="inline-flex flex-shrink-0 items-center rounded-full bg-green-50 px-1.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                      #{s.id}
+                    </span>}
+                      </div>
+                      <p className="mt-1 truncate text-sm text-gray-500">Year: {s.year}</p>
                     </div>
-                    <p className="mt-1 truncate text-sm text-gray-500">Year: {s.year}</p>
                   </div>
-                </div>
-              </li>
-            )
-          })}
-        </ul>
+                </li>
+              )
+            })}
+          </ul>
+          ) : (
+            <NoStudentsSection setOpen={handleAddStudent}/>
+          )
+        )}
+        
+        
       </div>
       <div className="w-1/2">
         <div className='text-xl font-bold'>Assignments</div>
-        <ul className="pr-10 py-5 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
-          {assignments.map((a,i) => {
-            return (
-              <li onClick={() => {
-                setAssignmentFBID(a.uid);
-                setAssignmentDetail(a.assignmentDetail);
-                setAssignmentName(a.name);
-                setAssignmentPoints(a.points);
-                setAssignmentRubric(a.rubricDescription);
-                setOpenAddAssignment(true);}} key={i} className="cursor-pointer col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
-                <div className="flex w-full items-center justify-between space-x-6 p-6">
-                  <div className="flex-1 truncate">
-                    <div className="flex items-center space-x-3">
-                      <h3 className="truncate text-sm font-medium text-gray-900">{a.name}</h3>
+        {assignmentsLoading ? (<span className="my-10 loading loading-dots loading-lg"></span>) : (
+          assignments && assignments.length ? (
+            <ul className="pr-10 py-5 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
+            {assignments.map((a,i) => {
+              return (
+                <li onClick={() => {
+                  setAssignmentFBID(a.uid);
+                  setAssignmentDetail(a.assignmentDetail);
+                  setAssignmentName(a.name);
+                  setAssignmentPoints(a.points);
+                  setAssignmentRubric(a.rubricDescription);
+                  setOpenAddAssignment(true);}} key={i} className="cursor-pointer col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
+                  <div className="flex w-full items-center justify-between space-x-6 p-6">
+                    <div className="flex-1 truncate">
+                      <div className="flex items-center space-x-3">
+                        <h3 className="truncate text-sm font-medium text-gray-900">{a.name}</h3>
+                      </div>
+                      <p className="mt-1 truncate text-sm text-gray-500">Points: {a.points}</p>
                     </div>
-                    <p className="mt-1 truncate text-sm text-gray-500">Points: {a.points}</p>
                   </div>
-                </div>
-              </li>
+                </li>
+              )
+            })}
+          </ul>
+          ) : (
+              <NoAssignmentsSection/>
             )
-          })}
-        </ul>
+        )}
+        
+        
       </div> 
     </div>
     <AddAssignment firebaseDocId={assignmentFBID} setFirebaseDocId={setAssignmentFBID} name={assignmentName} setName={setAssignmentName} points={assignmentPoints} setPoints={setAssignmentPoints} assignmentDetail={assignmentDetail} setAssignmentDetail={setAssignmentDetail} rubricDescription={assignmentRubric} setRubricDescription={setAssignmentRubric} open={openAddAssignment} setOpen={setOpenAddAssignment} notifyAssignmentsChange={setAssignmentsChanged} notification={assignmentsChanged}/>
@@ -219,3 +246,53 @@ const Class = () => {
 }
 
 export default Class
+
+
+const NoStudentsSection = () => {
+return (
+  <div className="text-center">
+      <svg
+        className="mx-auto h-12 w-12 text-gray-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          vectorEffect="non-scaling-stroke"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+        />
+      </svg>
+      <h3 className="mt-2 text-sm font-semibold text-gray-900">No Students</h3>
+      <p className="mt-1 text-sm text-gray-500">Get started by creating a new Student.</p>
+    </div>
+  )
+}
+
+
+const NoAssignmentsSection = () => {
+  return (
+    <div className="text-center">
+        <svg
+          className="mx-auto h-12 w-12 text-gray-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            vectorEffect="non-scaling-stroke"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+          />
+        </svg>
+        <h3 className="mt-2 text-sm font-semibold text-gray-900">No Assignments</h3>
+        <p className="mt-1 text-sm text-gray-500">Get started by creating a new Assignment.</p>
+      </div>
+    )
+  }

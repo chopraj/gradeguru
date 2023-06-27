@@ -1,9 +1,12 @@
-import { Fragment,useState } from 'react'
-import { Outlet,useNavigate,NavLink } from "react-router-dom";
-import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, CogIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { signOut } from "firebase/auth";
+import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Fragment, useState } from 'react'
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+
 import { auth } from "../components/firebase/config";
+import defaultUser from '../assets/default-user.png'
+import { signOut } from "firebase/auth";
+import {useAuth} from '../contexts/AuthContext'
 
 const user = {
   name: 'Tom Cook',
@@ -28,6 +31,7 @@ function classNames(...classes) {
 function DashboardLayout() {
   const navigate = useNavigate();
   const [classes,setClasses] = useState([])
+  const {firebaseUser} = useAuth();
 
   const handleLogout = () => {
     signOut(auth)
@@ -40,6 +44,10 @@ function DashboardLayout() {
             console.log(err);
         });
 };
+
+  const handleGoToBilling = () => {
+    navigate("/app/billing");
+  }
 
 
 
@@ -84,6 +92,7 @@ function DashboardLayout() {
                   <div className="hidden sm:ml-6 sm:flex sm:items-center">
                     <button
                       type="button"
+                      onClick={handleGoToBilling}
                       className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       <span className="sr-only">View notifications</span>
@@ -95,7 +104,7 @@ function DashboardLayout() {
                       <div>
                         <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                           <span className="sr-only">Open user menu</span>
-                          <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                          <img className="h-8 w-8 rounded-full" src={defaultUser} alt="" />
                         </Menu.Button>
                       </div>
                       <Transition
@@ -164,14 +173,14 @@ function DashboardLayout() {
                 <div className="border-t border-gray-200 pb-3 pt-4">
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                      <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                      <img className="h-10 w-10 rounded-full" src={defaultUser} alt="" />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">{user.name}</div>
-                      <div className="text-sm font-medium text-gray-500">{user.email}</div>
+                      <div className="text-sm font-medium text-gray-500">{firebaseUser.email}</div>
                     </div>
                     <button
                       type="button"
+                      onClick={handleGoToBilling}
                       className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       <span className="sr-only">View notifications</span>

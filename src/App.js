@@ -1,33 +1,25 @@
-// Imports
-import React from "react";
 import {
-    createBrowserRouter,
-    createRoutesFromElements,
     Outlet,
     Route,
     RouterProvider,
+    createBrowserRouter,
+    createRoutesFromElements,
 } from "react-router-dom";
 
 import {AuthProvider} from './contexts/AuthContext';
-import PrivateRoute from "./components/utils/PrivateRoute";
-
-import Landing from './components/Landing.jsx'
-import DashboardLayout from "./layouts/DashboardLayout.jsx";
-
-
-import Login from './components/Login/Login.jsx';
-import Signup from './components/Login/Signup.jsx'
-
-
-import Classes from './components/app/Classes.jsx';
+import Billing from "./components/app/Billing";
 import Class from './components/app/Class.jsx';
-import Student from './components/app/Student.jsx';
-import Grade from './components/app/Grade.jsx';
+import Classes from './components/app/Classes.jsx';
 import ContactUs from "./components/app/ContactUs.jsx";
-
-
-
-
+import DashboardLayout from "./layouts/DashboardLayout.jsx";
+import Grade from './components/app/Grade.jsx';
+import Landing from './components/Landing/Landing.jsx';
+import Login from './components/Login/Login.jsx';
+import PrivateRoute from "./components/utils/PrivateRoute";
+// Imports
+import React from "react";
+import Signup from './components/Login/Signup.jsx'
+import Student from './components/app/Student.jsx';
 
 const Root = () => {
     return (
@@ -58,6 +50,8 @@ const router = createBrowserRouter(
                     <Route path="grade" element={<Grade/>}/>
 
                     <Route path="contact-us" element={<ContactUs/>}/>
+
+                    <Route path="billing" element={<Billing/>}/>
                 </Route>
             </Route>
         </Route>

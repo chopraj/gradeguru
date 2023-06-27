@@ -10,13 +10,9 @@ import { useNavigate } from "react-router-dom";
 
 const NoClassesSection = ({open,setOpen}) => {
 
-  
   const handleAddClassBtn = () => {
     setOpen(true);
   }
-
-
-
   return (
   <div className="text-center">
       <svg
@@ -80,8 +76,10 @@ const Classes = () => {
   const {firebaseUser} = useAuth();
   const [classes,setClasses] = useState([]);
   const [classesChanged,setClassesChanged] = useState(false);
+  const [loading,setLoading] = useState(false);
 
   const getClasses = async () => {
+    setLoading(true);
     const docRef = doc(db,"users",firebaseUser.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
@@ -93,6 +91,7 @@ const Classes = () => {
         }
       }
       setClasses(fetchedClasses)
+      setLoading(false);
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
@@ -129,17 +128,18 @@ const Classes = () => {
       </div>
     </div>
     <Divider/>
-    {classes && classes.length ? (
-      <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
-        {classes.map((c,i) => <SingleClass key={i} id={c.id} name={c.name} subject={c.subject} year={c.year} />)}
-      </ul>
-    ) : <NoClassesSection open={slideoverOpen} setOpen={setSlideoverOpen}/>}
-    
+    {loading ? (<span className="loading loading-dots loading-lg"></span>) : (
+      classes && classes.length ? (
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+          {classes.map((c,i) => <SingleClass key={i} id={c.id} name={c.name} subject={c.subject} year={c.year} />)}
+        </ul>
+      ) : <NoClassesSection open={slideoverOpen} setOpen={setSlideoverOpen}/>
+    )}
+
     <AddClass open={slideoverOpen} setOpen={setSlideoverOpen} notification={classesChanged} notifyChange={setClassesChanged} />
     </>
   )
 }
-// TODO: set loading state above^^
 export default Classes
 
 
