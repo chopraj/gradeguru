@@ -3,6 +3,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Fragment, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
+import GGLogo from '../assets/GGLogo.png'
 import { auth } from "../components/firebase/config";
 import defaultUser from '../assets/default-user.png'
 import { signOut } from "firebase/auth";
@@ -62,14 +63,14 @@ function DashboardLayout() {
                   <div className="flex">
                     <div className="flex flex-shrink-0 items-center">
                       <img
-                        className="block h-8 w-auto lg:hidden"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                        alt="Your Company"
+                        className="block h-8 w-auto lg:hidden p-.5"
+                        src={GGLogo}
+                        alt="GradeGuru"
                       />
                       <img
-                        className="hidden h-8 w-auto lg:block"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                        alt="Your Company"
+                        className="hidden h-8 w-auto lg:block p-1"
+                        src={GGLogo}
+                        alt="GradeGuru"
                       />
                     </div>
                     <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
