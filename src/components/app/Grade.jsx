@@ -46,7 +46,7 @@ const Grade = () => {
     try {
       setLoading(true);
       const result = await fetch("https://gradeguru-backend.vercel.app/grade", {
-      method: "POST",
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
