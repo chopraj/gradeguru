@@ -147,10 +147,6 @@ const Classes = () => {
     getClasses();
   },[classesChanged])
 
-  useEffect(() => {
-    console.log(userIsStarter)
-  },[userIsStarter])
-
   const [slideoverOpen,setSlideoverOpen] = useState(false);
   const handleAddClassBtn = () => {
     setSlideoverOpen(true);

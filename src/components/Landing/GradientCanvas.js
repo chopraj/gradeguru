@@ -2,9 +2,9 @@ import Gradient from "../../gradient";
 import { useEffect } from "react";
 
 const GradientCanvas = () => {
-  useEffect(() => {
-    new Gradient().initGradient("#gradient-canvas");
-  }, []);
+  // useEffect(() => {
+  //   new Gradient().initGradient("#gradient-canvas");
+  // }, []);
 
   return (
     <div></div>
