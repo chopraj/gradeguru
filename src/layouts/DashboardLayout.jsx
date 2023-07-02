@@ -48,6 +48,9 @@ function DashboardLayout() {
     navigate("/app/billing");
   }
 
+  const handleGoToLanding = () => {
+    navigate("/");
+  }
 
 
   return (
@@ -61,12 +64,14 @@ function DashboardLayout() {
                   <div className="flex">
                     <div className="flex flex-shrink-0 items-center">
                       <img
-                        className="block h-8 w-auto lg:hidden p-.5"
+                        className="cursor-pointer block h-8 w-auto lg:hidden p-.5"
                         src={GGLogo}
+                        onClick={handleGoToLanding}
                         alt="GradeGuru"
                       />
                       <img
-                        className="hidden h-8 w-auto lg:block p-1"
+                        onClick={handleGoToLanding}  
+                        className="cursor-pointer hidden h-8 w-auto lg:block p-1"
                         src={GGLogo}
                         alt="GradeGuru"
                       />

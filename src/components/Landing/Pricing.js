@@ -7,7 +7,7 @@ const PRICINGS = [
     title: "Starter",
     isStarter: true,
     description: "Best option for teachers just dipping their toes in to save time and increase efficiency.",
-    price: 10,
+    price: 15,
     checklist: [
       "Base AI model",
       "Rubric specific analysis",
@@ -18,7 +18,7 @@ const PRICINGS = [
   {
     title: "Premium",
     description: "Best option for teachers who have many many students, and require more advanced models.",
-    price: 17,
+    price: 20,
     checklist: [
       "Track student progress",
       "Premium AI model",
