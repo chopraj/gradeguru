@@ -16,8 +16,8 @@ const user = {
     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
 }
 const navigation = [
-  { name: 'Classes', href: '../app/classes', current: window.location.pathname === '/app/classes',to: "classes" },
   {name: 'Grade', href: '../app/grade' , current: window.location.pathname === '/app/grade',to: "grade"},
+  { name: 'Classes', href: '../app/classes', current: window.location.pathname === '/app/classes',to: "classes" },
   {name: 'Contact Us', href: '../app/contact-us', current: window.location.pathname === '/app/contact-us', to: "contact-us" },
 ]
 const userNavigation = [
@@ -37,11 +37,9 @@ function DashboardLayout() {
   const handleLogout = () => {
     signOut(auth)
         .then(() => {
-            console.log("Signout successful!");
             navigate("/");
         })
         .catch((err) => {
-            console.log("Error signing out");
             console.log(err);
         });
 };

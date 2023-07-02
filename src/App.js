@@ -1,13 +1,16 @@
 import {
+    Navigate,
     Outlet,
     Route,
     RouterProvider,
     createBrowserRouter,
-    createRoutesFromElements,
+    createRoutesFromElements
 } from "react-router-dom";
 
 import {AuthProvider} from './contexts/AuthContext';
 import Billing from "./components/app/Billing";
+import { BillingProvider } from "./contexts/BillingContext";
+import BillingRoute from "./components/utils/BillingRoute";
 import Class from './components/app/Class.jsx';
 import Classes from './components/app/Classes.jsx';
 import ContactUs from "./components/app/ContactUs.jsx";
@@ -39,19 +42,21 @@ const router = createBrowserRouter(
             
             <Route element={<PrivateRoute/>}>
                 <Route path='app' element={<DashboardLayout/>}>
-                    {/*add index path here (Dashboard maybe??) */}
-                    <Route path="classes">
-                    <Route index element={<Classes/>}/> 
-                    <Route path=":classId" element={<Class/>}>
-                        <Route path=":studentId" element={<Student/>}/>
+                    <Route element={<BillingRoute/>}>
+                        <Route index element ={<Navigate to="./grade"/>}/>
+                        <Route path="classes">
+                        <Route index element={<Classes/>}/> 
+                        <Route path=":classId" element={<Class/>}>
+                            <Route path=":studentId" element={<Student/>}/>
+                        </Route>
+                        </Route>
+
+                        <Route path="grade" element={<Grade/>}/>
+
+                        <Route path="contact-us" element={<ContactUs/>}/>
+
+                        <Route path="billing" element={<Billing/>}/>
                     </Route>
-                    </Route>
-
-                    <Route path="grade" element={<Grade/>}/>
-
-                    <Route path="contact-us" element={<ContactUs/>}/>
-
-                    <Route path="billing" element={<Billing/>}/>
                 </Route>
             </Route>
         </Route>
@@ -63,7 +68,9 @@ const router = createBrowserRouter(
 const App = () => {
     return (
         <AuthProvider>
-            <RouterProvider router={router}/>
+            <BillingProvider>
+                <RouterProvider router={router}/>
+            </BillingProvider>
         </AuthProvider>
     )
 };

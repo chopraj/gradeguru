@@ -9,17 +9,15 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({ children }) => {
-    const [firebaseUser, setFirebaseUser] = useState();
+    const [firebaseUser, setFirebaseUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
             if (user) {
-                console.log("[AuthContext] firebase user found");
                 setFirebaseUser(user);
                 setLoading(false);
             } else {
-                console.log("[AuthContext] firebase user NOT found");
                 setLoading(false);
             }
         });

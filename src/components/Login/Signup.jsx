@@ -1,10 +1,12 @@
-import React, {useState} from 'react'
-import {auth,db} from '../firebase/config'
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import {doc,setDoc,addDoc,updateDoc,arrayUnion,collection} from 'firebase/firestore'
-import { useNavigate } from "react-router-dom";
-import { XCircleIcon } from '@heroicons/react/20/solid'
+import React, {useEffect, useState} from 'react'
+import {addDoc, arrayUnion, collection, doc, setDoc, updateDoc} from 'firebase/firestore'
+import {auth, db} from '../firebase/config'
 
+import GGLogo from '../../assets/GGLogo.png'
+import { XCircleIcon } from '@heroicons/react/20/solid'
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 const ERRORS = {
   "Firebase: Error (auth/email-already-in-use).":
@@ -21,13 +23,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword,setConfirmPassword] = useState("");
   const [error,setError] = useState(null);
+  const {firebaseUser} = useAuth(auth);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (!checkInputs()) {
       return;
     }
-    console.log('Signing Up...')
     try {
       const userCredential = await createUserWithEmailAndPassword(auth,email,password);
       const userRef = await setDoc(doc(db, "users",userCredential.user.uid),{
@@ -98,7 +100,7 @@ const Login = () => {
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <img
               className="mx-auto h-10 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+              src={GGLogo}
               alt="Your Company"
             />
             <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">

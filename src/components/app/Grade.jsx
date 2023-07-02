@@ -1,20 +1,22 @@
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid'
 import React,{useEffect, useState} from 'react'
 import { addDoc, arrayUnion, collection, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 
-import { CheckCircleIcon } from '@heroicons/react/20/solid'
 import Checklist from '../utils/Checklist'
 import Divider from '../utils/Divider'
 import GradeModal from './GradeModal'
+import { SparklesIcon } from '@heroicons/react/24/outline'
 import {db} from '../firebase/config'
 import {useAuth} from '../../contexts/AuthContext'
+import {useBilling} from '../../contexts/BillingContext'
 
 const Grade = () => {
-  const isPremiumUser = false;
   const fetchClasses = true;
   const [assignmentDetail,setAssignmentDetail] = useState("")
   const [rubricDescription,setRubricDescription] = useState("")
   const [studentResponse, setStudentResponse] = useState("")
   const [loading, setLoading] = useState(false);
+  
 
   // Checklists
   const [classSelected, setClassSelected] = useState(null);
@@ -28,12 +30,19 @@ const Grade = () => {
   const [tips, setTips] = useState("");
 
   const {firebaseUser} = useAuth();
+  const {userIsPremium, userIsStarter, isPaying} = useBilling();
   const [classes,setClasses] = useState([{name: " ", id: 1}]);
   const [students,setStudents] = useState([{name: " ", id: 1}]);
   const [assignments,setAssignments] = useState([{name: " ", id: 1}]);
 
+  const [showAlert, setShowAlert] = useState(false);
+
 
   const handleGrade = async () => {
+    if (assignmentDetail === "" || rubricDescription === "" || studentResponse === "") {
+      setShowAlert(true);
+      return;
+    }
     try {
       setLoading(true);
       const result = await fetch("http://localhost:3001/grade", {
@@ -42,7 +51,7 @@ const Grade = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: isPremiumUser ? "gpt-4" : "gpt-3.5-turbo",
+        model: userIsPremium ? "gpt-4" : "gpt-3.5-turbo",
         assignmentDetail: assignmentDetail,
         rubricDescription: rubricDescription,
         studentResponse: studentResponse
@@ -80,12 +89,10 @@ const Grade = () => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const fetchedClasses = [];
-      console.log('docSnap',docSnap.data())
       for (const c of docSnap.data().classes) {
         const classSnap = await getDoc(c);
         if (classSnap.exists()) {
           fetchedClasses.push({id: classSnap.id, ...classSnap.data()})
-          console.log(classSnap.data())
         }
       }
       setClasses(fetchedClasses)
@@ -113,7 +120,6 @@ const Grade = () => {
           fetchedAssignments.push({uid:assignmentSnap.id,...assignmentSnap.data()});
         }
       }
-      console.log(fetchedAssignments, fetchedStudents);
       setStudents(fetchedStudents);
       setAssignments(fetchedAssignments);
   }}
@@ -123,7 +129,7 @@ const Grade = () => {
     if (fetchClasses) {
       getClasses();
     }
-  }, [])
+  }, [fetchClasses])
 
   useEffect(() => {
     if (!classSelected) {
@@ -145,6 +151,7 @@ const Grade = () => {
 
   return (
     <>
+    
     <div className="md:flex md:items-center md:justify-between">
       <div className="min-w-0 flex-1">
         <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
@@ -154,11 +161,18 @@ const Grade = () => {
       </div>
     </div>
     <Divider/>
+    <Alert show={showAlert} setShow={setShowAlert}/>
     <div className="flex flex-row">
         <div className="w-1/2 pr-10">
-            <Checklist label={"Class"} items={classes} placeholder="Class" selected={classSelected} setSelected={setClassSelected}/>
-            <Checklist label={"Student"} items={students} placeholder="Choose 'Class' first" selected={studentSelected} setSelected={setStudentSelected} disabled={!classSelected}/>
-            <Checklist label={"Assignment"} items={assignments} placeholder="Choose 'Class' first" selected={assignmentSelected} setSelected={setAssignmentSelected} disabled={!classSelected}/>
+            {userIsPremium && (
+              <>
+              <Checklist label={"Class"} items={classes} placeholder="Class" selected={classSelected} setSelected={setClassSelected}/>
+              <Checklist label={"Student"} items={students} placeholder="Choose 'Class' first" selected={studentSelected} setSelected={setStudentSelected} disabled={!classSelected}/>
+              <Checklist label={"Assignment"} items={assignments} placeholder="Choose 'Class' first" selected={assignmentSelected} setSelected={setAssignmentSelected} disabled={!classSelected}/>
+              </>
+            )}
+            
+
             <div>
                 <label htmlFor="project-description" className="pt-3 block text-sm font-medium leading-6 text-gray-900 sm:mt-1.5" >
                      Assignment Detail
@@ -216,10 +230,10 @@ const Grade = () => {
         onClick={handleGrade}
         type="button"
         disabled={loading}
-        className="mt-10 inline-flex items-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        className="mt-10 inline-flex items-center gap-x-2 rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
       >
       {loading ? (<span className="mx-5 loading loading-md loading-dots text-success "></span>) : ("Grade")}
-        {!loading ? <CheckCircleIcon className="-mr-0.5 h-5 w-5" aria-hidden="true" /> : ""}
+        {!loading ? <SparklesIcon className="-mr-0.5 h-5 w-5" aria-hidden="true" /> : ""}
     </button>
     <GradeModal open={open} setOpen={setOpen} grade={grade} explanation={explanation} tips={tips}/>
     
@@ -230,3 +244,37 @@ const Grade = () => {
 export default Grade
 
 
+const Alert = ({message,show,setShow}) => {
+
+  useEffect(() =>{
+    if (!show) {
+      return;
+    }
+    setTimeout(() => {
+      setShow(false);
+    },4000)
+  },[show])
+
+  if (!show) {
+    return <></>
+  }
+
+  return (
+    <div className="rounded-md bg-red-50 p-4 border-l-4 border-r-4 border-red-400">
+      <div className="flex">
+        <div className="flex-shrink-0">
+          <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+        </div>
+        <div className="ml-3">
+          <h3 className="text-sm font-medium text-red-800">Submission Error</h3>
+          <div className="mt-2 text-sm text-red-700">
+            <ul className="list-disc space-y-1 pl-5">
+              <li>Please ensure the Assignment Detail, Rubric Description, and Student Response fields are filled out for best results</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+}

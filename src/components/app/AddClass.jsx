@@ -14,7 +14,6 @@ const AddClass = ({open,setOpen,notifyChange,notification}) => {
   const [year,setYear] = useState('');
 
   const handleAddClass = async () => {
-    console.log("Starting to add class...")
     try {
       const classRef = await addDoc(collection(db, "classes"),{
         name: name,
@@ -26,7 +25,6 @@ const AddClass = ({open,setOpen,notifyChange,notification}) => {
       const userRef = await updateDoc(doc(db,"users",firebaseUser.uid),{
         classes: arrayUnion(classRef)
       });
-      console.log("Added class successfully!");
       notifyChange(!notification);
       setOpen(false);
     } catch (err) {

@@ -4,7 +4,7 @@ import { Fragment, useRef, useState } from 'react'
 
 import Notification from '../utils/Notificaiton'
 
-const GradeModal = ({open,setOpen,grade,explanation,tips}) => {
+const GradeModal = ({open,setOpen,grade,explanation,tips,isAlreadyGraded,name}) => {
 
   const cancelButtonRef = useRef(null)
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -45,7 +45,7 @@ const GradeModal = ({open,setOpen,grade,explanation,tips}) => {
                 <div>
                   <div className="my-5 justify-center">
                   <Dialog.Title as="h3" className="flex flex-col items-center justify-center text-center text-base font-semibold leading-6 text-gray-900">
-                      Assignment Graded!
+                      {isAlreadyGraded ? name : "Assignment Graded!"}
                       <div className="mt-5 radial-progress text-indigo-600" style={{"--value": parseInt(grade)}}>{grade}%</div>
                     </Dialog.Title>
                   </div>

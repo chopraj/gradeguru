@@ -1,9 +1,11 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
+
+import GGLogo from '../../assets/GGLogo.png'
+import { XCircleIcon } from '@heroicons/react/20/solid'
 import {auth} from '../firebase/config'
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from "react-router-dom";
-import { XCircleIcon } from '@heroicons/react/20/solid'
-
 
 const ERRORS = {
   "Firebase: Error (auth/wrong-password).": "Incorrect username or password",
@@ -20,13 +22,13 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState('');
+  const {firebaseUser} = useAuth(auth);
 
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log(userCredential.user.uid);
       
       navigate("/app"); 
     } catch (err) {
@@ -61,7 +63,7 @@ const navigateToForgotPassword = () => {
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <img
               className="mx-auto h-10 w-auto"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+              src={GGLogo}
               alt="Your Company"
             />
             <h2 className="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">

@@ -1,16 +1,15 @@
-import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
+import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCzQyGrIeuIcbBKkenzwulOaKvO-SSmjZo",
-  authDomain: "gradeguru-15307.firebaseapp.com",
-  projectId: "gradeguru-15307",
-  storageBucket: "gradeguru-15307.appspot.com",
-  messagingSenderId: "830331114384",
-  appId: "1:830331114384:web:178d43ac9d1209da5c1915",
-  measurementId: "G-R5QRMZKY3Q"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGE_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase

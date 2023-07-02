@@ -7,6 +7,5 @@ import {useAuth} from '../contexts/AuthContext'
 export default async function isUserStarter(user) {
     await getIdToken(user,true);
     const decodedToken = await getIdTokenResult(user,true);
-    console.log(decodedToken.claims.stripeRole);
     return decodedToken?.claims?.stripeRole === 'starter' ? true : false;
 }   

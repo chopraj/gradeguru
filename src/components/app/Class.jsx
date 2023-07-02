@@ -19,6 +19,7 @@ const Class = () => {
 
   const [students,setStudents] = useState([]);
   const [studentFBID,setStudentFBID] = useState('');
+  const [studentSubmissions,setStudentSubmissions] = useState([]);
   const [openAddStudent,setOpenAddStudent] = useState(false);
   const [studentName,setStudentName] = useState('');
   const [studentId,setStudentId] = useState('');
@@ -50,6 +51,7 @@ const Class = () => {
     setStudentName("");
     setStudentId("");
     setStudentYear("");
+    setStudentSubmissions([]);
     setOpenAddStudent(true);
   }
 
@@ -120,7 +122,6 @@ const Class = () => {
       setAssignmentsLoading(false);
     } else {
       // doc.data() will be undefined in this case
-      console.log("No such document!");
     }
   }
   
@@ -181,6 +182,7 @@ const Class = () => {
                   setStudentName(s.name);
                   setStudentId(s.id);
                   setStudentYear(s.year);
+                  setStudentSubmissions(s.submissions);
                   setOpenAddStudent(true); 
                 }} key={i} className="cursor-pointer col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow">
                   <div className="flex w-full items-center justify-between space-x-6 p-6">
@@ -240,7 +242,7 @@ const Class = () => {
       </div> 
     </div>
     <AddAssignment firebaseDocId={assignmentFBID} setFirebaseDocId={setAssignmentFBID} name={assignmentName} setName={setAssignmentName} points={assignmentPoints} setPoints={setAssignmentPoints} assignmentDetail={assignmentDetail} setAssignmentDetail={setAssignmentDetail} rubricDescription={assignmentRubric} setRubricDescription={setAssignmentRubric} open={openAddAssignment} setOpen={setOpenAddAssignment} notifyAssignmentsChange={setAssignmentsChanged} notification={assignmentsChanged}/>
-    <AddStudent firebaseDocId={studentFBID} setFirebaseDocId={setStudentFBID} name={studentName} setName={setStudentName} id={studentId} setId={setStudentId} year={studentYear} setYear={setStudentYear} open={openAddStudent} setOpen={setOpenAddStudent} notifyStudentChange={setStudentsChanged} notification={studentsChanged}/>
+    <AddStudent firebaseDocId={studentFBID} setFirebaseDocId={setStudentFBID} name={studentName} setName={setStudentName} id={studentId} setId={setStudentId} year={studentYear} setYear={setStudentYear} open={openAddStudent} setOpen={setOpenAddStudent} notifyStudentChange={setStudentsChanged} notification={studentsChanged} submissions={studentSubmissions}/>
     </>
   ) 
 }

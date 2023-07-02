@@ -15,15 +15,15 @@ const Footer = () => {
               <h2 className="mb-6 text-sm font-semibold uppercase">Legal</h2>
               <ul>
                 <li className="mb-4">
-                  <a href="#" className="hover:underline">
+                  <a href="https://docs.google.com/document/d/1QXPFs7zq5CUJQjim698qQEo-gnsR3Cab_8jRHrt9uNE/edit?usp=sharing" className="hover:underline">
                     Privacy Policy
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a href="#" className="hover:underline">
                     Terms & Conditions
                   </a>
-                </li>
+                </li> */}
               </ul>
             </div>
           </div>

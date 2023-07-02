@@ -1,17 +1,18 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { LinkIcon, PlusIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid'
-import {addDoc, arrayUnion, collection, doc, setDoc, updateDoc} from 'firebase/firestore'
+import {addDoc, arrayUnion, collection, doc, getDoc, setDoc, updateDoc} from 'firebase/firestore'
 
+import Divider from '../utils/Divider'
+import GradeModal from './GradeModal'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import {db} from '../firebase/config'
 import { useParams } from 'react-router-dom'
 
-const AddStudent = ({open,setOpen,firebaseDocId,setFirebaseDocId,name,setName,id,setId,year,setYear,notifyStudentChange,notification}) => {
+const AddStudent = ({open,setOpen,firebaseDocId,setFirebaseDocId,name,setName,id,setId,year,setYear,notifyStudentChange,notification,submissions}) => {
 
   const {classId} = useParams();
   const handleAddStudent = async () => {
-    console.log("Starting to add student...")
     try {
       const studentRef = await addDoc(collection(db, "students"),{
         name: name,
@@ -31,7 +32,6 @@ const AddStudent = ({open,setOpen,firebaseDocId,setFirebaseDocId,name,setName,id
 
 
   const handleUpdateStudent = async () => {
-    console.log("Starting to update student...")
     try {
       const studentRef = await updateDoc(doc(db,"students",firebaseDocId),{
         name: name,
@@ -52,6 +52,37 @@ const AddStudent = ({open,setOpen,firebaseDocId,setFirebaseDocId,name,setName,id
       handleUpdateStudent();
     }
   }
+
+  const parseSubmissions = async () => {
+    if (!submissions || submissions.length === 0) {
+      return;
+    }
+    let ps = []
+    for (const sub of submissions) {
+      const subSnap = await getDoc(sub);
+      if (subSnap.exists()) {
+        const assignmentSnap = await getDoc(subSnap.data().assignmentId);
+        ps.push({...assignmentSnap.data(), ...subSnap.data()});
+      }
+    }
+    setParsedSubmissions(ps);
+  }
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    parseSubmissions();
+  },[submissions, open])
+
+  const [parsedSubmissions,setParsedSubmissions] = useState([]);
+
+  const [gradeModalOpen,setGradeModalOpen] = useState(false);
+  const [gradeModalAssignmentName,setGradeModalAssignmentName] = useState("");
+  const [gradeModalAssignmentGrade,setGradeModalAssignmentGrade] = useState("");
+  const [gradeModalAssignmentExplanation,setGradeModalAssignmentExplanation] = useState("");
+  const [gradeModalAssignmentTips,setGradeModalAssignmentTips] = useState("");
+  
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -155,7 +186,38 @@ const AddStudent = ({open,setOpen,firebaseDocId,setFirebaseDocId,name,setName,id
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                           </div>
+                        <div>
+                          <label
+                            htmlFor="project-name"
+                            className="block text-sm font-medium leading-6 text-gray-900 sm:mt-1.5"
+                          >
+                            {parsedSubmissions && parsedSubmissions.length ? "Past Submissions" : ""}
+                          </label>
                         </div>
+                        {parsedSubmissions?.map((sub,i) => {
+                          return (
+                            <div
+                              key={i}
+                              onClick={() => {
+                                setGradeModalAssignmentGrade(sub.feedback.grade);
+                                setGradeModalAssignmentName(sub.name);
+                                setGradeModalAssignmentExplanation(sub.feedback.explanation);
+                                setGradeModalAssignmentTips(sub.feedback.tips);
+                                setGradeModalOpen(true);
+                              }}
+                              className="cursor-pointer relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+                            >
+                              <div className="min-w-0 flex-1">
+                                <a className="focus:outline-none">
+                                  <span className="absolute inset-0" aria-hidden="true" />
+                                  <p className="text-sm font-medium text-gray-900">{sub.name}</p>
+                                  <p className="truncate text-sm text-gray-500">Grade: {sub.feedback.grade}</p>
+                                </a>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
 
                       </div>
                     </div>
@@ -186,7 +248,9 @@ const AddStudent = ({open,setOpen,firebaseDocId,setFirebaseDocId,name,setName,id
             </div>
           </div>
         </div>
+        <GradeModal open={gradeModalOpen} isAlreadyGraded setOpen={setGradeModalOpen} name={gradeModalAssignmentName} grade={gradeModalAssignmentGrade} explanation={gradeModalAssignmentExplanation} tips={gradeModalAssignmentTips} />
       </Dialog>
+      
     </Transition.Root>
   )
 }

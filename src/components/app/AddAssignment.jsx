@@ -12,7 +12,6 @@ export default function AddAssignment({open,setOpen,firebaseDocId,setFirebaseDoc
   const {classId} = useParams();
   
   const handleAddAssignment = async () => {
-    console.log("Starting to add assignment...")
     try {
       const assignmentRef = await addDoc(collection(db, "assignments"),{
         name: name,
@@ -23,7 +22,6 @@ export default function AddAssignment({open,setOpen,firebaseDocId,setFirebaseDoc
       const classRef = await updateDoc(doc(db,"classes",classId),{
         assignments: arrayUnion(assignmentRef)
       });
-      console.log("Added assignment successfully!");
       notifyAssignmentsChange(!notification);
       setOpen(false);
     } catch (err) {
@@ -32,7 +30,6 @@ export default function AddAssignment({open,setOpen,firebaseDocId,setFirebaseDoc
   }
 
   const handleUpdateAssignment = async () => {
-    console.log("Starting to update assignment...")
     try {
       const assignmentRef = await updateDoc(doc(db,"assignments",firebaseDocId),{
         name: name,
@@ -40,7 +37,6 @@ export default function AddAssignment({open,setOpen,firebaseDocId,setFirebaseDoc
         assignmentDetail: assignmentDetail,
         rubricDescription: rubricDescription,
       });
-      console.log("Updated assignment successfully!");
       notifyAssignmentsChange(!notification);
       setOpen(false);
     } catch (err) {
