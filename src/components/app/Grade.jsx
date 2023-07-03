@@ -4,6 +4,7 @@ import { addDoc, arrayUnion, collection, doc, getDoc, serverTimestamp, updateDoc
 
 import Checklist from '../utils/Checklist'
 import Divider from '../utils/Divider'
+import ErrorModal from '../utils/ErrorModal'
 import GradeModal from './GradeModal'
 import { SparklesIcon } from '@heroicons/react/24/outline'
 import {db} from '../firebase/config'
@@ -36,6 +37,7 @@ const Grade = () => {
   const [assignments,setAssignments] = useState([{name: " ", id: 1}]);
 
   const [showAlert, setShowAlert] = useState(false);
+  const [errorAlert, setErrorAlert] = useState(false);
 
 
   const handleGrade = async () => {
@@ -79,6 +81,7 @@ const Grade = () => {
     setLoading(false);
     } catch (err) {
       console.log(err);
+      setErrorAlert(true);
       setLoading(false);
     }
     
@@ -236,6 +239,7 @@ const Grade = () => {
         {!loading ? <SparklesIcon className="-mr-0.5 h-5 w-5" aria-hidden="true" /> : ""}
     </button>
     <GradeModal open={open} setOpen={setOpen} grade={grade} explanation={explanation} tips={tips}/>
+    <ErrorModal open={errorAlert} setOpen={setErrorAlert} />
     
     </>
   )
