@@ -5,7 +5,7 @@ const FAQ = [
   {
     question: "How accurate is GradeGuru's grading?",
     answer:
-      "Scary accurate. We have a 1% average score difference between our AI and human graders. Plus, our service constantly reflects the latest AI tech, meaning our models are always improving to support your students. ",
+      "Scary accurate. We have a 3% average score difference between our AI and human graders. Plus, our service constantly reflects the latest AI tech, meaning our models are always improving to support your students. ",
   },
   {
     question: "How does GradeGuru work?",

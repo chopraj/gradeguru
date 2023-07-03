@@ -14,7 +14,7 @@ const FEATURES = [
   {
     icon: <RocketLaunchIcon className="w-6" />,
     title: "Streamline Grading",
-    description: "You're busy enough! We speed up the grading process 100 fold by leveraging aritifical intellegence to give accurate feedback.",
+    description: "You're busy enough! We speed up the grading process 20 fold by leveraging aritifical intellegence to give accurate feedback.",
   },
   {
     title: "Give Actionable Feedback",

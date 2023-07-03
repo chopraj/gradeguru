@@ -10,9 +10,9 @@ const FEATURES = [
     description:
       "Deliver excellent feedback and grades to your students, even for assignments that are just for completion. ",
     checklist: [
-      "100x faster grading workflow with the latest AI technology",
+      "20x faster grading workflow with the latest AI technology",
       "Automatic adjustments to specific rubrics",
-      "1% average score difference between our AI and human graders",
+      "3% average score difference between our AI and human graders",
       "GradeGuru's models are constantly evolving to improve accuracy"
     ],
   },
