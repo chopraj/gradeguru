@@ -25,7 +25,7 @@ const FAQ = [
   {
     question: "Where should I go if I have more questions?",
     answer:
-      "Feel free to contact us at _____. We're happy to answer any questions or concerns you may have.",
+      "Feel free to contact us at gradeguru.ai@gmail.com. We're happy to answer any questions or concerns you may have.",
   },
 ];
 

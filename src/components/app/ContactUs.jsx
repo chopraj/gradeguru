@@ -23,7 +23,7 @@ const ContactUs = () => {
               Let us help you figure out the right plan for your use case. 
             </p>
             <p className="mt-4">
-              <a href="#" className="text-sm font-semibold leading-6 text-indigo-600">
+              <a href="mailto:gradeguru.ai@gmail.com" className="text-sm font-semibold leading-6 text-indigo-600">
                 Contact us <span aria-hidden="true">&rarr;</span>
               </a>
             </p>
@@ -39,7 +39,7 @@ const ContactUs = () => {
               If you find a bug report it here and we'll solve the issue as soon as possible.
             </p>
             <p className="mt-4">
-              <a href="#" className="text-sm font-semibold leading-6 text-indigo-600">
+              <a href="mailto:gradeguru.ai@gmail.com" className="text-sm font-semibold leading-6 text-indigo-600">
                 Report a bug <span aria-hidden="true">&rarr;</span>
               </a>
             </p>
@@ -55,8 +55,8 @@ const ContactUs = () => {
               Having troble with the software? We're here to help.
             </p>
             <p className="mt-4">
-              <a href="#" className="text-sm font-semibold leading-6 text-indigo-600">
-                Join our Discord <span aria-hidden="true">&rarr;</span>
+              <a href="mailto:gradeguru.ai@gmail.com" className="text-sm font-semibold leading-6 text-indigo-600">
+                Get tech help <span aria-hidden="true">&rarr;</span>
               </a>
             </p>
           </div>
