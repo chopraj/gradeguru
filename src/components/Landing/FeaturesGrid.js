@@ -14,19 +14,19 @@ const FEATURES = [
   {
     icon: <RocketLaunchIcon className="w-6" />,
     title: "Streamline Grading",
-    description: "You're busy enough! We speed up the grading process 20 fold by leveraging artificial intellegence to give accurate feedback.",
+    description: "You're busy enough! We speed up the grading process 20 fold by leveraging AI to give accurate feedback.",
   },
   {
     title: "Give Actionable Feedback",
     description:
-      "Our models have been fine-tuned on thousands of student submissions to give you the most accurate and helpful feedback possible.",
+      "Each grade is justified with a detailed explanation of why the student received that grade. This allows students to improve their work and learn from their mistakes.",
     icon: <AcademicCapIcon className="w-6" />,
   },
   {
     icon: <PresentationChartLineIcon className="w-6" />,
     title: "Track Student Growth",
     description:
-      "Empower your students and watch them grow! Our iteractive platform allows you to track student growth over time and see how they improve.",
+      "Empower your students and watch them grow! Our iteractive platform allows you to track student growth over time and watch them improve.",
   },
 ];
 

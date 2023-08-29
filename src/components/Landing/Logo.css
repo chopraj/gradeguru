@@ -1,3 +1,11 @@
 .logo-color {
     color: #504AED;
 }
+
+.bg-logo-color {
+    background-color: #504AED;
+}
+
+.logo-font{
+    font-family: 'Kanit', sans-serif;
+}

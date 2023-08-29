@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
             <Logo isFooter/>
-            <p>Disrupting the education landscape</p>
+            <p>Empower your students</p>
           </div>
           <div className="grid grid-cols-1x gap-8 sm:gap-6 sm:grid-cols-1">
             <div>

@@ -3,14 +3,9 @@ import Container from "./Container";
 
 const FAQ = [
   {
-    question: "How accurate is GradeGuru's grading?",
-    answer:
-      "Scary accurate. We have a 3% average score difference between our AI and human graders. Plus, our service constantly reflects the latest AI tech, meaning our models are always improving to support your students. ",
-  },
-  {
     question: "How does GradeGuru work?",
     answer:
-      "Great question! GradeGuru is built on top of the world's greatest large-language models (LLMs) to accurately analyze student responses. Moreover, these models are fine-tuned on thousands of student responses to understand the nuances of student writing and provide feedback that is both accurate and actionable. ",
+      "Great question! GradeGuru is built on top of OpenAI's GPT-3.5 and GPT-4 models to accurately analyze student responses. These models have been trained large amounts of internet data enabling them to understand the nuances of student writing and provide feedback that is both accurate and actionable. ",
   },
   {
     question: "I use specific rubrics for my assignments. Can GradeGuru still work for me?",
@@ -36,7 +31,7 @@ const Faq = () => {
         <Container xpadded ypadded>
           <div className="text-center mb-8 lg:mb-12">
             <h2 className="mb-24 text-4xl lg:text-6xl tracking-tight font-semibold">
-              Frequently asked questions
+              FAQ
             </h2>
           </div>
           {FAQ.map(({ question, answer }) => {
