@@ -36,7 +36,7 @@ const FeaturesGrid = () => {
       <Container xpadded ypadded>
         <div className="mb-16 max-md:flex flex-col items-center w-full">
           <div className="max-w-screen-md">
-            <h2 className="mb-4 text-4xl lg:text-6xl tracking-tight font-semibold text-indigo-500">
+            <h2 className="mb-4 text-4xl lg:text-6xl tracking-tight font-semibold text-indigo-600">
               Designed for <br/> classrooms just like yours
             </h2>
             <p className="sm:text-xl">
@@ -48,7 +48,7 @@ const FeaturesGrid = () => {
           {FEATURES.map(({ icon, title, description }) => {
             return (
               <div className="flex" key={title}>
-                <div className="flex shrink-0 items-center justify-center mb-4 w-12 h-12 rounded-full bg-indigo-400 mr-5 text-indigo-50">
+                <div className="flex shrink-0 items-center justify-center mb-4 w-12 h-12 rounded-full bg-indigo-600 mr-5 text-indigo-50">
                   {icon}
                 </div>
                 <div className="flex flex-col">

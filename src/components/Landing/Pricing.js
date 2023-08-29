@@ -79,7 +79,7 @@ const Pricing = () => {
     <section id="pricing" className="text-slate-800">
       <Container xpadded ypadded>
         <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
-          <h2 className="mb-4 text-4xl lg:text-6xl tracking-tight font-semibold text-indigo-500">
+          <h2 className="mb-4 text-4xl lg:text-6xl tracking-tight font-semibold text-indigo-600">
             Invest in your classroom's potential
           </h2>
           <p className="mb-5 font-light sm:text-xl">
