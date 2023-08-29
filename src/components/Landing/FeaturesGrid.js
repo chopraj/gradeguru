@@ -19,7 +19,7 @@ const FEATURES = [
   {
     title: "Give Actionable Feedback",
     description:
-      "Each grade is justified with a detailed explanation of why the student received that grade. This allows students to improve their work and learn from their mistakes.",
+      "Each grade is justified with a detailed explanation of why the student received that grade along with tips for improvement.",
     icon: <AcademicCapIcon className="w-6" />,
   },
   {

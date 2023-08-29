@@ -1,9 +1,17 @@
+import { Navigate, useNavigate } from "react-router-dom";
+
 import Container from "../Container";
 import HeroCTA from "./HeroCTA";
 import HeroHeadlines from "./HeroHeadlines";
 import HeroImage from "./HeroImage";
 
 const Hero = ({isMentor}) => {
+  const navigate = useNavigate();
+
+  const getStarted = () => {
+    navigate("/signup")
+  }
+
   return (
       <Container id="home" className="pb-16 pt-20 text-center lg:pt-32">
 
@@ -17,8 +25,7 @@ const Hero = ({isMentor}) => {
 
 
       <h1 className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl text-center">
-        Grade work in <br/>
-        <s className="text-indigo-600">hours</s> seconds {" "}<br/>
+        Grade work in seconds {" "}<br/>
         <span className="relative whitespace-nowrap logo-color -z-10 mb-5">
           with AI
         </span>
@@ -28,7 +35,7 @@ const Hero = ({isMentor}) => {
       </p>
       <div className="mt-10 flex justify-center gap-x-6 pb-16">
       <div className="flex flex-col items-center justify-center">
-          <button className="bg-logo-color shadow-indigo-400/75 shadow-md transition-transform duration-200 hover:scale-[1.02] text-white px-7 py-4 rounded-full backdrop-blur-lg"><b>Get started today!</b></button>
+          <button onClick={getStarted} className="bg-logo-color shadow-indigo-400/75 shadow-md transition-transform duration-200 hover:scale-[1.02] text-white px-7 py-4 rounded-full backdrop-blur-lg"><b>Get started today!</b></button>
         </div>
       </div>
     </Container>
