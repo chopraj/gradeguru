@@ -9,7 +9,7 @@ const PRICINGS = [
     description: "Best option for teachers just dipping their toes in to save time and increase efficiency.",
     price: 15,
     checklist: [
-      "Base AI model",
+      "GPT-3.5 model",
       "Rubric specific analysis",
       "No setup, or hidden fees",
       "Free updates forever",
@@ -21,7 +21,7 @@ const PRICINGS = [
     price: 20,
     checklist: [
       "Track student progress",
-      "Premium AI model",
+      "Premium GPT-4 model",
       "Rubric specific analysis",
       "No setup, or hidden fees",
       "Free updates forever",

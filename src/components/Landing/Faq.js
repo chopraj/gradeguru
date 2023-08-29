@@ -15,7 +15,7 @@ const FAQ = [
   {
     question: "How can I integrate GradeGuru into my teaching workflow?",
     answer:
-      "We recommend using GradeGuru as a first-pass grader to help you quickly identify student responses that need your attention. Additionally, GradeGuru can be used to provide students with tips for improvement even for assignemnts that you exclusively grade for completion; this way students have more opportunities to leverage feedback and grow.",
+      "We recommend using GradeGuru as a first-pass grader to help you quickly identify student responses that need your attention. Additionally, GradeGuru can be used to provide students with tips for improvement even for assignments that you exclusively grade for completion; this way students have more opportunities to leverage feedback and grow.",
   },
   {
     question: "Where should I go if I have more questions?",
