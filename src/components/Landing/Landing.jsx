@@ -15,7 +15,7 @@ function Landing() {
       <GradientCanvas />
       <Hero />
       <FeaturesGrid />
-      {/* <FeaturesDetailed /> */}
+      <FeaturesDetailed />
       {/* <Testimonials /> */}
       <Pricing />
       <Faq />

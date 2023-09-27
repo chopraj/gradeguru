@@ -6,14 +6,13 @@ const FEATURES = [
   {
     reverse: true,
     image: featureOne,
-    title: "Invest in your classroom's potential",
+    title: "Speed up your grading workflow",
     description:
       "Deliver excellent feedback and grades to your students, even for assignments that are just for completion. ",
     checklist: [
       "20x faster grading workflow with the latest AI technology",
       "Automatic adjustments to specific rubrics",
       "3% average score difference between our AI and human graders",
-      "GradeGuru's models are constantly evolving to improve accuracy"
     ],
   },
 ];
