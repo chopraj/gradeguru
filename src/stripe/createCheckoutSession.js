@@ -8,6 +8,7 @@ export async function createCheckoutSession(user,isProPlan) {
         price: isProPlan ? "price_1NP9hJJVFY2CVxLQG9RPTYVe" : "price_1NP9jNJVFY2CVxLQD9ejGdoY",
         success_url: window.location.origin,
         cancel_url: window.location.origin,
+        allow_promotion_codes: true,
     });
     // Wait for the CheckoutSession to get attached by the extension
     const unsub = onSnapshot(checkoutSessionRef,async (snap) => {
