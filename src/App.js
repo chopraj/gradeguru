@@ -18,6 +18,7 @@ import DashboardLayout from "./layouts/DashboardLayout.jsx";
 import Grade from './components/app/Grade.jsx';
 import Landing from './components/Landing/Landing.jsx';
 import Login from './components/Login/Login.jsx';
+import PageNotFound from './components/app/404.jsx'
 import PrivateRoute from "./components/utils/PrivateRoute";
 // Imports
 import React from "react";
@@ -59,7 +60,10 @@ const router = createBrowserRouter(
                     </Route>
                 </Route>
             </Route>
+
+            <Route path="*" element={<PageNotFound/>}/>
         </Route>
+        
     )
 )
 

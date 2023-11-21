@@ -2,7 +2,7 @@ import Container from "./Container";
 
 const TESTIMONIALS = [
   {
-    name: "Bonnie Green",
+    name: "Bonnie indigo",
     job: "Developer at Open AI",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
     quote:

@@ -15,7 +15,7 @@ const HeaderButtons = () => {
       <button onClick={handleLogin}>Log in</button>
       <button
         onClick={handleGetStarted}
-        className="bg-indigo-500 text-white px-5 py-2 rounded-full backdrop-blur-lg"
+        className="bg-indigo-600 text-white px-5 py-2 rounded-full backdrop-blur-lg"
       >
         Get Started
       </button>
