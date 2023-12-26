@@ -1,3 +1,4 @@
+import { ArrowUpOnSquareIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid'
 import React,{useEffect, useState} from 'react'
 import { addDoc, arrayUnion, collection, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
@@ -6,7 +7,7 @@ import Checklist from '../utils/Checklist'
 import Divider from '../utils/Divider'
 import ErrorModal from '../utils/ErrorModal'
 import GradeModal from './GradeModal'
-import { SparklesIcon } from '@heroicons/react/24/outline'
+import UploadModal from './UploadModal'
 import {db} from '../firebase/config'
 import {useAuth} from '../../contexts/AuthContext'
 import {useBilling} from '../../contexts/BillingContext'
@@ -38,6 +39,7 @@ const Grade = () => {
 
   const [showAlert, setShowAlert] = useState(false);
   const [errorAlert, setErrorAlert] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
 
 
   const handleGrade = async () => {
@@ -78,7 +80,7 @@ const Grade = () => {
         submissions: arrayUnion(submissionRef),
       })
     }
-   
+
     setLoading(false);
     } catch (err) {
       console.log(err);
@@ -239,9 +241,19 @@ const Grade = () => {
       {loading ? (<span className="mx-5 loading loading-md loading-dots text-success "></span>) : ("Grade")}
         {!loading ? <SparklesIcon className="-mr-0.5 h-5 w-5" aria-hidden="true" /> : ""}
     </button>
+    {userIsPremium ? 
+    <button
+      onClick={() => setShowUpload(true)}
+      type='button'
+      disabled={loading}
+      className="mt-10 ml-5 inline-flex items-center gap-x-2 rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+    >
+      {loading ? (<span className="mx-5 loading loading-md loading-dots text-success "></span>) : ("Bulk Upload")}
+      {!loading ? <ArrowUpOnSquareIcon className="-mr-0.5 h-5 w-5" aria-hidden="true" /> : ""}
+    </button> : <></>}
     <GradeModal open={open} setOpen={setOpen} grade={grade} explanation={explanation} tips={tips}/>
     <ErrorModal open={errorAlert} setOpen={setErrorAlert} />
-    
+    <UploadModal open={showUpload} setOpen={setShowUpload} />
     </>
   )
 }
