@@ -50,7 +50,7 @@ const Grade = () => {
     try {
       setLoading(true);
       // TODO: add middleware to check user status
-      const result = await fetch("https://gradeguru-backend.vercel.app/grade", {
+      const result = await fetch("http://localhost:3001/grade", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
