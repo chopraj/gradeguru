@@ -27,7 +27,11 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (firebaseUser) {
+      navigate("/app");
+    }
     try {
+      
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       
       navigate("/app"); 
